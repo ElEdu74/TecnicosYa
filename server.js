@@ -48,7 +48,8 @@ addressRoutes(app);
 productsRoutes(app, upload);
 ordersRoutes(app);
 
-server.listen(3000,'192.168.1.103' || 'localhost', function() {
+//server.listen(3000,'192.168.1.103' || 'localhost', function() {
+server.listen(port, function() {
     console.log('Aplicacion de NodeJS ' + process.pid + ' iniciada...')
 });
 
