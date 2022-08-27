@@ -14,24 +14,35 @@ User.findById = (id, result) => {
         U.image,
         U.phone,
         U.password,
-        json_arrayagg(
-			json_object(
-				'id', CONVERT(R.id, char),
-				'name', R.name,
-				'image', R.image,
-				'route', R.route
-            )
-        ) AS roles
-    FROM
-        users AS U
-	INNER JOIN
-		user_has_roles AS UHR
-	ON
-		UHR.id_user = U.id
-	INNER JOIN
-		roles AS R
-	ON
-		UHR.id_rol = R.id
+        UJSON.roles
+        FROM
+            users AS U
+        INNER JOIN
+            (
+                SELECT id_usuario_json, CONCAT('[', resultado, ']') AS roles FROM
+                (
+                SELECT id_usuario_json, GROUP_CONCAT('{', my_json, '}' SEPARATOR ',') AS resultado FROM
+                (
+                SELECT 
+                    U.id AS id_usuario_json,
+                    CONCAT
+                    (
+                    '"id": '   , '"', RJSON.id, '"', ', ' 
+                    '"name": '   , '"', RJSON.name, '"', ', ' 
+                    '"image": '   , '"', RJSON.image, '"', ', ' 
+                    '"route": ', '"', RJSON.route, '"'
+                    ) AS my_json
+				FROM users AS U
+				INNER JOIN user_has_roles AS UHR
+				ON UHR.id_user = U.id
+				INNER JOIN roles AS RJSON
+				ON UHR.id_rol = RJSON.id
+                ) AS more_json
+                GROUP BY id_usuario_json
+                ) AS yet_more_json
+            ) AS UJSON
+        ON
+            UJSON.id_usuario_json = U.id
     WHERE
         U.id = ?
 	GROUP BY

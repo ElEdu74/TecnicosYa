@@ -169,12 +169,6 @@ module.exports = {
             user.id = `${data}`;
             const token = jwt.sign({id: user.id, email: user.email}, keys.secretOrKey, {});
             user.session_token = `JWT ${token}`;
-            console.log("********");
-            console.log(user.id);
-            console.log(user.email);
-            console.log(user.session_token);
-            console.log(keys.secretOrKey);
-            console.log("********");
 
             Rol.create(user.id, 3, (err, data) => {
                 if (err) {
