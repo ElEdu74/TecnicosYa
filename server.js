@@ -50,7 +50,7 @@ ordersRoutes(app);
 
 //server.listen(3000,'192.168.1.103' || 'localhost', function() {
 server.listen(port, function() {
-    console.log('Aplicacion de NodeJS ' + process.pid + ' iniciada...')
+    console.log('Aplicacion de NodeJS ' + port + ' iniciada...')
 });
 
 app.get('/', (req, res) => {
