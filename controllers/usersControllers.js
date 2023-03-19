@@ -43,7 +43,7 @@ module.exports = {
             if (!myUser) {
                 return res.status(401).json({
                     success: false,
-                    message: password //'El email no fue encontrado'
+                    message: 'El email no fue encontrado'
                 });
             }
 
