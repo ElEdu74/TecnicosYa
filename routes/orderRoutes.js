@@ -5,6 +5,7 @@ module.exports = (app) => {
     
     app.get('/api/orders/findByStatus/:status', passport.authenticate('jwt', { session: false }), ordersController.findByStatus);
     app.get('/api/orders/findByTechnicalAndStatus/:id_technical/:status', passport.authenticate('jwt', { session: false }), ordersController.findByTechnicalAndStatus);
+    app.get('/api/orders/findByClientAndStatus/:id_client/:status', passport.authenticate('jwt', { session: false }), ordersController.findByClientAndStatus);
 
     app.post('/api/orders/create', passport.authenticate('jwt', { session: false }), ordersController.create);
 

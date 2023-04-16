@@ -21,6 +21,24 @@ module.exports = {
         });
     },
 
+    findByClientAndStatus(req, res) {
+        const id_client = req.params.id_client;
+        const status = req.params.status;
+
+        Order.findByClientAndStatus(id_client, status, (err, data) => {
+            if (err) { 
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error con el listado de órdenes',
+                    error: err
+                });
+            }
+
+            // codigo para parsear el json, no hace falta
+            return res.status(201).json(data);
+        });
+    },
+
     findByTechnicalAndStatus(req, res) {
         const id_technical = req.params.id_technical;
         const status = req.params.status;
@@ -53,9 +71,11 @@ module.exports = {
                     error: err
                 });
             }
-
+            console.log("-1");
+            console.log(order.products);
             for (const product of order.products) {
-                await OrderHasProducts.create(id, product.id, product.quantity, (err, id_data) => {
+                console.log("-2");
+                await OrderHasProducts.create(id, product.id, product.quantity, product.equipo, product.problema, product.horario, (err, id_data) => {
                     if (err) {
                         return res.status(501).json({
                             success: false,

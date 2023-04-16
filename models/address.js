@@ -7,6 +7,7 @@ Address.findByUser = (id_user, result) => {
     SELECT
         CONVERT(id, char) AS id,
         address,
+        cp,
         neighborhood,
         lat,
         lng,
@@ -26,7 +27,6 @@ Address.findByUser = (id_user, result) => {
                 result(err, null);
             }
             else {
-                console.log('Data:', data);
                 result(null, data);
             }
         }
@@ -39,6 +39,7 @@ Address.create = (address, result) => {
         INSERT INTO
             address(
                 address, 
+                cp,
                 neighborhood,
                 lat,
                 lng,
@@ -46,13 +47,14 @@ Address.create = (address, result) => {
                 created_at, 
                 updated_at
             )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     db.query(
         sql,
         [
             address.address,
+            address.cp,
             address.neighborhood,
             address.lat,
             address.lng,

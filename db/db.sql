@@ -95,6 +95,7 @@ CREATE TABLE products(
 CREATE TABLE address(  
     id BIGINT PRIMARY KEY AUTO_INCREMENT,     
     address VARCHAR(255) NOT NULL,     
+    cp VARCHAR(10) NOT NULL,     
     neighborhood VARCHAR(180) NOT NULL,     
     lat DOUBLE PRECISION NOT NULL,     
     lng DOUBLE PRECISION NOT NULL,     

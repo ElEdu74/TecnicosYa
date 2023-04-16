@@ -4,18 +4,22 @@ const OrderHasProducts = {};
 
 
 
-OrderHasProducts.create = (id_order, id_product, quantity, result) => {
+OrderHasProducts.create = (id_order, id_product, quantity, equipo, problema, horario, result) => {
 
+    console.log('OrderHasProducts.create ',id_order, id_product, quantity, equipo, problema, horario);
     const sql = `
         INSERT INTO
             order_has_products(
                 id_order, 
                 id_product,
                 quantity,
+                equipo,
+                problema,
+                horario,
                 created_at, 
                 updated_at
             )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     db.query(
@@ -24,6 +28,9 @@ OrderHasProducts.create = (id_order, id_product, quantity, result) => {
             id_order, 
             id_product,
             quantity,
+            equipo,
+            problema,
+            horario,
             new Date(),
             new Date()
         ],

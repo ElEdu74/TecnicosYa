@@ -17,18 +17,18 @@ Product.findByCategory = (id_category, result) => {
             products as P
         WHERE
             P.id_category = ?
+            OR 0 = ?
     `;
 
     db.query(
         sql,
-        [id_category],
+        [id_category, id_category],
         (err, res) => {
             if (err) {
                 console.log('Error:', err);
                 result(err, null);
             }
             else {
-                console.log('Productos: ', res);
                 result(null, res);
             }
         }
