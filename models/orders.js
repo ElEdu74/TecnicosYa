@@ -300,7 +300,7 @@ Order.create = (order, result) => {
         [
             order.id_client,
             order.id_address,
-            'PAGADO', //order.status, //1.PAGADO 2.DESPACHADO 3.EN CAMINO 4.ENTREGADO
+            'PEDIDA', //order.status, //1.PEDIDA 2.ASIGNADA 3.CUMPLIDA
             Date.now(),
             new Date(),
             new Date()
@@ -324,7 +324,7 @@ Order.create = (order, result) => {
 
 }
 
-Order.updateToDispatched = (id_order, id_technical, result) => {
+Order.updateToAsignada = (id_order, id_technical, result) => {
     const sql = `
     UPDATE
         orders
@@ -340,7 +340,7 @@ Order.updateToDispatched = (id_order, id_technical, result) => {
         sql,
         [
             id_technical,
-            'DESPACHADO', //order.status, //1.PAGADO 2.DESPACHADO 3.EN CAMINO 4.ENTREGADO
+            'ASIGNADA', //order.status, //1.PEDIDA 2.ASIGNADA 3.CUMPLIDA
             new Date(),
             id_order
         ],
@@ -356,7 +356,7 @@ Order.updateToDispatched = (id_order, id_technical, result) => {
     )
 }
 
-Order.updateToOnTheWay = (id_order, result) => {
+Order.updateToCumplida = (id_order, result) => {
     const sql = `
     UPDATE
         orders
@@ -370,7 +370,7 @@ Order.updateToOnTheWay = (id_order, result) => {
     db.query(
         sql,
         [
-            'EN CAMINO', //order.status, //1.PAGADO 2.DESPACHADO 3.EN CAMINO 4.ENTREGADO
+            'CUMPLIDA', //order.status, //1.PEDIDA 2.ASIGNADA 3.CUMPLIDA
             new Date(),
             id_order
         ],
