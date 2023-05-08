@@ -14,6 +14,8 @@ Order.findByStatus = (status, result) => {
         O.timestamp,
         O.lat,
         O.lng,
+        CONVERT(O.rating, char) AS rating,
+        O.obs_rating,
         JSON_OBJECT(
             'id', CONVERT(A.id, char),
             'address', A.address,
@@ -103,6 +105,8 @@ Order.findByClientAndStatus = (id_client, status, result) => {
     O.timestamp,
     O.lat,
     O.lng,
+    CONVERT(O.rating, char) AS rating,
+    O.obs_rating,
     JSON_OBJECT(
         'id', CONVERT(A.id, char),
         'address', A.address,
@@ -134,7 +138,10 @@ Order.findByClientAndStatus = (id_client, status, result) => {
         'image2', P.image2,
         'image3', P.image3,
         'price', P.price,
-        'quantity', OHP.quantity
+        'quantity', OHP.quantity,
+        'equipo', OHP.equipo,
+        'problema', OHP.problema,
+        'horario', OHP.horario
         )
     ) AS products
     FROM
@@ -198,6 +205,8 @@ Order.findByTechnicalAndStatus = (id_technical, status, result) => {
     O.timestamp,
     O.lat,
     O.lng,
+    CONVERT(O.rating, char) AS rating,
+    O.obs_rating,
     JSON_OBJECT(
         'id', CONVERT(A.id, char),
         'address', A.address,
@@ -300,7 +309,7 @@ Order.create = (order, result) => {
         [
             order.id_client,
             order.id_address,
-            'PEDIDA', //order.status, //1.PEDIDA 2.ASIGNADA 3.CUMPLIDA
+            'PEDIDO', //order.status, //1.PEDIDO 2.ASIGNADO 3.CUMPLIDO
             Date.now(),
             new Date(),
             new Date()
@@ -340,7 +349,7 @@ Order.updateToAsignada = (id_order, id_technical, result) => {
         sql,
         [
             id_technical,
-            'ASIGNADA', //order.status, //1.PEDIDA 2.ASIGNADA 3.CUMPLIDA
+            'ASIGNADO', //order.status, //1.PEDIDO 2.ASIGNADO 3.CUMPLIDO
             new Date(),
             id_order
         ],
@@ -370,7 +379,7 @@ Order.updateToCumplida = (id_order, result) => {
     db.query(
         sql,
         [
-            'CUMPLIDA', //order.status, //1.PEDIDA 2.ASIGNADA 3.CUMPLIDA
+            'CUMPLIDO', //order.status, //1.PEDIDO 2.ASIGNADO 3.CUMPLIDO
             new Date(),
             id_order
         ],
@@ -403,6 +412,68 @@ Order.updateLatLng = (order, result) => {
         [
             order.lat,
             order.lng,
+            new Date(),
+            order.id
+        ],
+        (err, res) => {
+            if (err) {
+                console.log('Error:', err);
+                result(err, null);
+            }
+            else {
+                result(null, order.id);
+            }
+        }
+    )
+}
+
+Order.updateTechnical = (order, result) => {
+    const sql = `
+    UPDATE
+        orders
+    SET
+        id_technical = ?,
+        status = ?,
+        updated_at = ?
+    WHERE
+        id = ?
+    `;
+
+    db.query(
+        sql,
+        [
+            order.id_technical,
+            order.status,
+            new Date(),
+            order.id
+        ],
+        (err, res) => {
+            if (err) {
+                console.log('Error:', err);
+                result(err, null);
+            }
+            else {
+                result(null, order.id);
+            }
+        }
+    )
+}
+
+Order.updateQualify = (order, result) => {
+    const sql = `
+    UPDATE
+        orders
+    SET
+        rating = ?,
+        updated_at = ?
+    WHERE
+        id = ?
+    `;
+
+    db.query(
+        sql,
+        [
+            order.rating,
             new Date(),
             order.id
         ],

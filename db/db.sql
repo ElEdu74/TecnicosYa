@@ -114,6 +114,8 @@ CREATE TABLE orders(
     lng DOUBLE PRECISION, 
     status VARCHAR(90) NOT NULL,
     timestamp BIGINT NOT NULL,
+    rating INT,
+    obs_rating VARCHAR(500),
     created_at TIMESTAMP(0) NOT NULL,     
     updated_at TIMESTAMP(0) NOT NULL,
     FOREIGN KEY(id_client) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,

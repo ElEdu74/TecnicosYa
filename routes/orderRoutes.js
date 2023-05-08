@@ -9,8 +9,10 @@ module.exports = (app) => {
 
     app.post('/api/orders/create', passport.authenticate('jwt', { session: false }), ordersController.create);
 
+    app.put('/api/orders/updateTechnical', passport.authenticate('jwt', { session: false }), ordersController.updateTechnical);
     app.put('/api/orders/updateToDispatched', passport.authenticate('jwt', { session: false }), ordersController.updateToDispatched);
     app.put('/api/orders/updateToOnTheWay', passport.authenticate('jwt', { session: false }), ordersController.updateToOnTheWay);
     app.put('/api/orders/updateLatLng', passport.authenticate('jwt', { session: false }), ordersController.updateLatLng);
+    app.put('/api/orders/updateQualify', passport.authenticate('jwt', { session: false }), ordersController.updateQualify);
  
 }

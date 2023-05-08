@@ -159,6 +159,46 @@ module.exports = {
             });
   
         })
-    }
+    },
 
+    updateTechnical(req, res) {
+        const order = req.body;
+
+        Order.updateTechnical(order, (err, id_order) => {
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error con la actualización del pedido',
+                    error: err
+                });
+            }
+
+            return res.status(201).json({
+                success: true,
+                message: 'El pedido se actualizó correctamente',
+                data: `${id_order}`
+            });
+  
+        })
+    },
+
+    updateQualify(req, res) {
+        const order = req.body;
+
+        Order.updateQualify(order, (err, id_order) => {
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error con la actualización del pedido',
+                    error: err
+                });
+            }
+
+            return res.status(201).json({
+                success: true,
+                message: 'El pedido se actualizó correctamente',
+                data: `${id_order}`
+            });
+        })
+    }
 }
