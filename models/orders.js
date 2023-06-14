@@ -194,12 +194,36 @@ Order.findByClientAndStatus = (id_client, status, result) => {
     )
 }
 
-Order.findByTechnicalAndStatus = (id_technical, status, result) => {
+Order.findByTechnicalAndStatus = (id_technical, status, id_zone, result) => {
+
+    console.log("***");
+    console.log(id_zone);
+    console.log("***");
+    if (status=="PEDIDO" || status=="OTRAS ZONAS") {
+        whereTechnical = `(O.id_technical = ?  OR 1=1) `;
+    } else {
+        whereTechnical = `O.id_technical = ? `;
+    }
+    if (status=="PEDIDO" || status=="OTRAS ZONAS") {
+        whereStatus = ` (status = "PEDIDO" OR "" = ?) `;
+    } else {
+        whereStatus = ` status = ? `;
+    }
+    whereZone = ` "" != ? `;
+    if (status=="PEDIDO") {
+        whereZone = ` Z.id = ? `;
+    }
+    if (status=="OTRAS ZONAS") {
+        whereZone = ` (Z.id != ? OR Z.id IS NULL) `;
+    }
+
     const sql = `
     SELECT 
     CONVERT(O.id, char) AS id,
     CONVERT(O.id_client, char) AS id_client,
     CONVERT(O.id_address, char) AS id_address,
+    A.cp,
+    CONVERT(Z.id, char) AS id_zone,
     CONVERT(O.id_technical, char) AS id_technical,
     O.status,
     O.timestamp,
@@ -254,17 +278,21 @@ Order.findByTechnicalAndStatus = (id_technical, status, result) => {
         address AS A
     ON
         A.id = O.id_address
+    LEFT JOIN
+		zones AS Z
+	ON
+		Z.cp = A.cp
     INNER JOIN
         order_has_products AS OHP
     ON 
         OHP.id_order = O.id
     INNER JOIN
-        products p
+        products P
     ON P.id = OHP.id_product
-    WHERE
-        O.id_technical = ? AND status = ?
-    GROUP BY
-        O.id
+    WHERE ` +
+    whereTechnical + ` AND ` + whereStatus + ` AND ` + whereZone +
+    ` GROUP BY
+        O.id, Z.id
     ORDER BY
         O.timestamp
     ;    
@@ -274,7 +302,8 @@ Order.findByTechnicalAndStatus = (id_technical, status, result) => {
         sql,
         [
             id_technical,
-            status
+            status,
+            id_zone
         ],
         (err, data) => {
             if (err) {
@@ -282,7 +311,13 @@ Order.findByTechnicalAndStatus = (id_technical, status, result) => {
                 result(err, null);
             }
             else {
-                console.log('Id de la nueva orden: ', data);
+                console.log(sql);
+                console.log("id_technical");
+                console.log(id_technical);
+                console.log("status");
+                console.log(status);
+                console.log("id_zone");
+                console.log(id_zone);
                 result(null, data);
             }
         }

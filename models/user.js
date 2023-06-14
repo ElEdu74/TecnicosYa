@@ -114,6 +114,7 @@ User.findEmail = (email, result) => {
         U.image,
         U.phone,
         U.password,
+        CONVERT(U.id_zone, char) AS id_zone,
         UJSON.roles
         FROM
             users AS U

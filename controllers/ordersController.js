@@ -42,8 +42,9 @@ module.exports = {
     findByTechnicalAndStatus(req, res) {
         const id_technical = req.params.id_technical;
         const status = req.params.status;
+        const id_zone = req.params.id_zone;
 
-        Order.findByTechnicalAndStatus(id_technical, status, (err, data) => {
+        Order.findByTechnicalAndStatus(id_technical, status, id_zone, (err, data) => {
             if (err) { 
                 return res.status(501).json({
                     success: false,

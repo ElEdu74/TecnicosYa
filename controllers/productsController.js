@@ -22,77 +22,24 @@ module.exports = {
     },
 
     create(req, res) {
-
-        const product = JSON.parse(req.body.product);
-
-        const files = req.files;
+        const product = req.body;
 
         let inserts = 0;
+        Product.create(product, (err, id) => {
 
-        if (files.length === 0) {
-            return res.status(501).json({
-                success: false,
-                message: 'Error - El producto no tiene imágenes',
-            });
-        }
-        else {
-            Product.create(product, (err, id_product) => {
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error con el registro del producto',
+                    error: err
+                });
+            }
 
-
-                if (err) {
-                    return res.status(501).json({
-                        success: false,
-                        message: 'Hubo un error con el registro del producto',
-                        error: err
-                    });
-                }
-
-                product.id = id_product;
-                const start = async () => {
-                    await asyncForEach(files, async (file) => {
-                        const path = `image_${Date.now()}`;
-                        const url = await storage(file, path);
-            
-                        if (url != undefined && url != null) {
-                            if (inserts == 0) {
-                                product.image1 = url;
-                            }
-                            else if (inserts == 1) {
-                                product.image2 = url;
-                            }
-                            else if (inserts == 2) {
-                                product.image3 = url;
-                            }
-                        }
-
-                        await Product.update(product, (err, data) => {
-                            if (err) {
-                                return res.status(501).json({
-                                    success: false,
-                                    message: 'Hubo un error con el registro del producto',
-                                    error: err
-                                });
-                            }
-
-                            inserts = inserts + 1;
-
-                            if (inserts == files.length) {
-                                    return res.status(201).json({
-                                        success: true,
-                                        message: 'El producto se registró correctamente',
-                                        data: data
-                                    });
-                            }
-
-                        });
-                    });
-                }
-        
-                start();
-
-            });
-        }
-
-    } 
-
+            return res.status(201).json({
+                success: true,
+                message: 'El producto se creó correctamente',
+                data: `${id}`
+            })
+        })
+    }
 }
